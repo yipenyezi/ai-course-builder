@@ -1,7 +1,10 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from typing import List
+from pathlib import Path
+from copy import deepcopy
+from src.sample_storyboard import SECTIONS, KNOWLEDGE_CHECK, ADDITIONAL_ASSESSMENTS
 
 
 @dataclass
@@ -19,6 +22,7 @@ class Storyboard:
     learning_objectives: List[str]
     sections: List[StoryboardSection]
     knowledge_check: dict
+    additional_assessments: list = field(default_factory=list)
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -38,6 +42,15 @@ def generate_storyboard(source_text: str, audience: str = "Adult learners") -> S
     preview = cleaned[:220].rstrip()
     title_seed = preview.split(".")[0][:70].strip() or "AI-Assisted Learning Module"
 
+    sample_path = Path(__file__).resolve().parent.parent / "data" / "sample_source.md"
+    is_review_sample = sample_path.exists() and cleaned == " ".join(sample_path.read_text(encoding="utf-8").split())
+    objectives = [
+        "By the end of the lesson, learning-content reviewers will be able to identify issues in AI-generated learning content using the review criteria.",
+        "By the end of the lesson, learning-content reviewers will be able to document required corrections before approving AI-generated content.",
+    ] if is_review_sample else [
+        "Draft objective pending ID input: specify the observable work behavior this material supports, linked to the confirmed performance gap."
+    ]
+
     sections = [
         StoryboardSection(
             title="Why this matters",
@@ -46,7 +59,7 @@ def generate_storyboard(source_text: str, audience: str = "Adult learners") -> S
                 "Introduce the core problem or opportunity.",
                 "Clarify when the learner will use this knowledge.",
             ],
-            interaction="Reflection prompt: identify one situation where this topic appears in your work.",
+            interaction="Pending source-specific scenario design: the mock cannot infer a validated work situation from this upload. Before approval, the ID must supply or confirm the exact situation, learner-visible facts, task, expected evidence, and feedback. This placeholder is not a ready-to-use assessment.",
         ),
         StoryboardSection(
             title="Core concepts",
@@ -61,23 +74,23 @@ def generate_storyboard(source_text: str, audience: str = "Adult learners") -> S
             title="Apply the learning",
             purpose="Move from recognition to practical application.",
             key_points=[
-                "Provide a realistic scenario.",
-                "Ask the learner to choose or construct an appropriate response.",
+                "Pending ID/SME input: specify a source-supported incident or explicitly synthetic case, including role, trigger, constraints, and decision cues.",
+                "Pending design: write the exact prompt, valid response evidence, plausible mistakes, consequences, and feedback before treating this section as ready to build.",
             ],
-            interaction="Scenario-based decision activity with feedback.",
+            interaction="Incomplete mock specification: no source-specific test situation or answer key has been established. Confirm the target behavior and concrete case before drafting choices or open-response criteria; do not infer learner competence from this outline.",
         ),
     ]
+
+    if is_review_sample:
+        sections = [StoryboardSection(**deepcopy(section)) for section in SECTIONS]
 
     return Storyboard(
         course_title=f"{title_seed}",
         audience=audience,
-        learning_objectives=[
-            "Explain the core concepts presented in the source material.",
-            "Apply the concepts to a realistic work scenario.",
-            "Identify an appropriate next action using the provided guidance.",
-        ],
+        learning_objectives=objectives,
         sections=sections,
-        knowledge_check={
+        additional_assessments=deepcopy(ADDITIONAL_ASSESSMENTS) if is_review_sample else [],
+        knowledge_check=deepcopy(KNOWLEDGE_CHECK) if is_review_sample else {
             "question": "Which response best demonstrates application of the key concept?",
             "options": [
                 "Repeat the definition without applying it.",

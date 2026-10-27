@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from html import escape
+import json
 
 
 def generate_interactive_html(storyboard: dict) -> str:
@@ -35,7 +36,25 @@ def generate_interactive_html(storyboard: dict) -> str:
         for i, option in enumerate(options)
     )
     answer_index = int(knowledge_check.get("answer_index", 0))
-    feedback = escape(knowledge_check.get("feedback", ""))
+    per_option = knowledge_check.get('feedback_mode') == 'per_option'
+    messages = knowledge_check.get('option_feedback', []) if per_option else [
+        ('Correct. ' + knowledge_check.get('feedback', '')) if i == answer_index
+        else ('Not yet. ' + knowledge_check.get('feedback', '')) for i in range(len(options))
+    ]
+    if per_option and (len(messages) != len(options) or not all(isinstance(m, str) and m.strip() for m in messages)):
+        raise ValueError('Each option needs feedback before rendering.')
+    messages_json = json.dumps(messages).replace('<', '\\u003c')
+    additional_html = []
+    for number, item in enumerate(storyboard.get('additional_assessments', []), 2):
+        if item.get('type') == 'written':
+            additional_html.append(f'''<section><h2>Item {number}: written practice</h2>
+            <label for="written-{number}">{escape(item['question'])}</label>
+            <textarea id="written-{number}" rows="5" style="display:block;width:100%"></textarea>
+            <p>Not automatically graded. Compare after your attempt; responses are not saved in this HTML prototype.</p>
+            <details><summary>Compare with criteria and example</summary><p>{escape(item['rubric'])}</p><p>{escape(item['model_response'])}</p></details></section>''')
+        else:
+            fragment = generate_interactive_html({'course_title': f'Item {number}', 'knowledge_check': item})
+            additional_html.append(f'<iframe title="Assessment item {number}" srcdoc="{escape(fragment, quote=True)}" style="width:100%;height:650px;border:1px solid #ccc"></iframe>')
 
     return f"""<!doctype html>
 <html lang="en">
@@ -71,21 +90,18 @@ def generate_interactive_html(storyboard: dict) -> str:
     <h2>Knowledge check</h2>
     <p>{escape(knowledge_check.get('question', ''))}</p>
     {option_html}
-    <div id="feedback"></div>
+    <div id="feedback" role="status" aria-live="polite"></div>
   </section>
 
+  {''.join(additional_html)}
 <script>
 function toggleCard(id) {{
   document.getElementById(id).classList.toggle('hidden');
 }}
 function checkAnswer(index) {{
-  const correct = {answer_index};
+  const messages = {messages_json};
   const feedback = document.getElementById('feedback');
-  if (index === correct) {{
-    feedback.textContent = "Correct. {feedback}";
-  }} else {{
-    feedback.textContent = "Try again. Look for the option that applies the concept in context.";
-  }}
+  feedback.textContent = messages[index];
 }}
 </script>
 </body>

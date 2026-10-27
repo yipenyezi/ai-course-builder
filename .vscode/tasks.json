@@ -1,0 +1,11 @@
+{
+  "version": "2.0.0",
+  "tasks": [{
+    "label": "Run AI Course Builder",
+    "type": "process",
+    "command": "${workspaceFolder}/.venv/bin/python",
+    "args": ["-m", "streamlit", "run", "${workspaceFolder}/app.py", "--server.address", "127.0.0.1", "--browser.gatherUsageStats", "false"],
+    "options": {"cwd": "${workspaceFolder}"},
+    "problemMatcher": []
+  }]
+}

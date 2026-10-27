@@ -1,0 +1,194 @@
+{
+  "schema_version": "0.1",
+  "project_id": "clearlake-discovery-demo",
+  "synthetic": true,
+  "review_status": "draft",
+  "notice": "All companies, evidence, standards, and incidents below are fictional design examples. No human approval is claimed.",
+  "diagnosis": {
+    "business_problem": "Discovery conversations lead to proposals before the customer problem is understood.",
+    "learner_brief": {
+      "audience": "New enterprise software sellers",
+      "prerequisites": "Basic ClearLake product orientation",
+      "delivery": "English, desktop, self-paced; no live customer data"
+    },
+    "evidence": [
+      {
+        "id": "E1",
+        "source": "Synthetic call observation",
+        "expected": "Confirm the desired business change before recommending",
+        "actual": "Seller recommends an AI platform immediately after an inventory AI request",
+        "limitation": "One fictional incident illustrates a gap; it cannot establish prevalence or causation."
+      }
+    ],
+    "gaps": [
+      {
+        "id": "G1",
+        "evidence_ids": [
+          "E1"
+        ],
+        "task": "Clarify the business problem during discovery"
+      }
+    ],
+    "causes": [
+      {
+        "id": "C1",
+        "gap_id": "G1",
+        "hypothesis": "Limited practice in discovery questioning",
+        "status": "requires validation"
+      }
+    ],
+    "intervention": "insufficient_evidence",
+    "next_action": "Validate the cause with observation and SME/learner input before approving a training intervention. The downstream drafts illustrate the conditional design only."
+  },
+  "sme_scope": {
+    "status": "conditional_draft",
+    "notes": [
+      {
+        "id": "N1",
+        "task": "Discovery",
+        "incident": "A retailer requests inventory AI; the seller offers features before exploring the problem.",
+        "decision": "Explore the outcome or recommend immediately",
+        "common_mistake": "Treating a requested solution as a validated need",
+        "exception": "If the customer cannot share details, agree on a follow-up with the appropriate stakeholders."
+      }
+    ],
+    "content": [
+      {
+        "id": "CT1",
+        "note_id": "N1",
+        "category": "must-do",
+        "item": "Elicit and confirm the intended business outcome",
+        "reason": "Directly addresses G1"
+      },
+      {
+        "id": "CT2",
+        "note_id": "N1",
+        "category": "must-know",
+        "item": "ClearLake cannot guarantee accurate forecasts merely by connecting data",
+        "reason": "Prevents unsupported commitments"
+      },
+      {
+        "id": "CT3",
+        "note_id": "N1",
+        "category": "look-up",
+        "item": "Product capability reference",
+        "reason": "Consult during work rather than memorize",
+        "job_aid": "Discovery and capability checklist"
+      },
+      {
+        "id": "CT4",
+        "category": "cut",
+        "item": "Detailed platform architecture",
+        "reason": "Outside the scope of this introductory discovery objective"
+      }
+    ]
+  },
+  "design": {
+    "status": "conditional_draft",
+    "objectives": [
+      {
+        "id": "LO1",
+        "gap_id": "G1",
+        "content_id": "CT1",
+        "text": "By the end of the lesson, sales representatives will be able to clarify a prospective customer's business need before recommending a solution.",
+        "standard": "Discovery questioning and confirmation of the stated need precede a recommendation; rubric requires ID/SME confirmation. Customer purchase is not a success criterion.",
+        "achievability": "One scoped conversation with a worked example and guided practice",
+        "approval": "pending ID/SME review",
+        "type": "terminal",
+        "learner_facing_purpose": "Find out what the customer needs before proposing a solution.",
+        "conditions_note": "Specify allowed references in the assessment brief if they affect the evidence; no invented speed or percentage requirement.",
+        "enabling_objectives": [
+          {
+            "id": "LO1a",
+            "text": "Identify information still needed to clarify a customer's business problem."
+          },
+          {
+            "id": "LO1b",
+            "text": "Use discovery questions to elicit the customer's desired business outcome."
+          },
+          {
+            "id": "LO1c",
+            "text": "Summarize the customer's stated need to check understanding before recommending a solution."
+          }
+        ]
+      }
+    ],
+    "course_map": [
+      {
+        "objective_id": "LO1",
+        "sequence": [
+          "problem hook",
+          "worked example with reasoning",
+          "guided decision practice",
+          "independent assessment",
+          "job aid and transfer prompt"
+        ]
+      }
+    ],
+    "assessment_brief": {
+      "objective_id": "LO1",
+      "aspect": "LO1a: identify the need to explore the business problem before recommending",
+      "proposed_count": 1,
+      "scenario_type": "synthetic variation",
+      "format": "decision question",
+      "limitation": "This decision item does not establish LO1b/LO1c or the full terminal behavior; open-conversation evidence is still required.",
+      "confirmation": "pending ID review"
+    },
+    "evaluation": {
+      "L1": "Relevance question",
+      "L2": "Decision rationale; later role-play evidence for the full behavior",
+      "L3": "Proposed workplace observation; timing and owner pending",
+      "L4": "Business measure and baseline pending; no outcome claim"
+    }
+  },
+  "storyboard": {
+    "tool": "Rise",
+    "status": "conditional_draft",
+    "lesson_id": "L1",
+    "blocks": [
+      {
+        "id": "B1",
+        "objective_id": "LO1",
+        "type": "hook",
+        "text": "A customer says: We want inventory AI. Can your platform do it? What do you need to learn before recommending?",
+        "visual": "Fictional chat workspace; customer request beside an empty discovery notes panel",
+        "accessibility": "The complete request is available as text; visual decoration is not required to understand it."
+      },
+      {
+        "id": "B2",
+        "objective_id": "LO1",
+        "type": "worked_example",
+        "text": "Ask what business outcome needs to change, then summarize the response to check understanding.",
+        "reasoning": "A solution request does not yet tell us what problem to solve."
+      },
+      {
+        "id": "B3",
+        "objective_id": "LO1",
+        "type": "decision",
+        "prompt": "A different customer asks to replace its reporting system. What do you do first?",
+        "choices": [
+          {
+            "text": "Clarify the problem with current reporting.",
+            "consequence": "The customer describes the actual reporting difficulty.",
+            "feedback": "Discovery establishes the problem before selecting a solution.",
+            "correct": true
+          },
+          {
+            "text": "Recommend a full migration to our platform.",
+            "consequence": "The customer asks why a migration is necessary.",
+            "feedback": "The recommendation is premature without understanding the problem.",
+            "correct": false
+          },
+          {
+            "text": "Offer a discount for signing this quarter.",
+            "consequence": "The customer repeats its concern about reporting.",
+            "feedback": "A discount does not clarify the operational need.",
+            "correct": false
+          }
+        ],
+        "feedback_timing": "pending ID confirmation"
+      }
+    ],
+    "review_request": "Confirm scope, standards, assessment count and format; add missing guided practice and complete accessibility/build details before approval."
+  }
+}
